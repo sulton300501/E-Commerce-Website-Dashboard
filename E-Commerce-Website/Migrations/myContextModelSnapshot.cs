@@ -212,7 +212,25 @@ namespace E_Commerce_Website.Migrations
 
                     b.HasKey("product_id");
 
+                    b.HasIndex("cat_id");
+
                     b.ToTable("tbl_products");
+                });
+
+            modelBuilder.Entity("E_Commerce_Website.Models.Product", b =>
+                {
+                    b.HasOne("E_Commerce_Website.Models.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("cat_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("E_Commerce_Website.Models.Category", b =>
+                {
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

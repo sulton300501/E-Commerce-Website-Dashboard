@@ -11,6 +11,7 @@ namespace E_Commerce_Website.Models
         public string product_price { get; set;}
         public string product_image { get; set;}
         public int cat_id { get; set; }
+        public Category Category { get; set; }
 
 
     

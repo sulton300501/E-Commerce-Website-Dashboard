@@ -7,5 +7,6 @@ namespace E_Commerce_Website.Models
         [Key]
         public int category_id { get; set; }
         public string category_name { get; set;}
+        public List<Product> Products { get; set; }
     }
 }
