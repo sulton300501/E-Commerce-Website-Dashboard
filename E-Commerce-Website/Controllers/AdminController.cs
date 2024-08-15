@@ -1,5 +1,6 @@
 ﻿using E_Commerce_Website.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_Website.Controllers
 {
@@ -212,6 +213,63 @@ namespace E_Commerce_Website.Controllers
             _context.SaveChanges();
             return RedirectToAction("fetchProduct");
         }
+
+
+
+        public IActionResult productDetails(int id) 
+        {
+            return View(_context.tbl_products.Include(p=>p.Category).FirstOrDefault(p=>p.product_id==id));
+        }
+
+        public IActionResult deletePermissionProduct(int id)
+        {
+            return View(_context.tbl_products.Include(p => p.Category).FirstOrDefault(p => p.product_id == id));
+        }
+
+
+        public IActionResult deleteProduct(int id)
+        {
+            var category = _context.tbl_products.Find(id);
+            _context.tbl_products.Remove(category);
+            _context.SaveChanges();
+            return RedirectToAction("fetchProduct");
+        }
+
+
+
+
+        public IActionResult updateProduct(int id)
+        {
+            List<Category> categories = _context.tbl_categories.ToList();
+            ViewData["category"] = categories;
+
+            var product = _context.tbl_products.Find(id);
+            ViewBag.SelectedCategoryId = product.cat_id;
+            return View(product);
+        }
+
+        [HttpPost]
+        public IActionResult updateProduct(Product product)
+        {
+            _context.tbl_products.Update(product);
+            _context.SaveChanges();
+            return RedirectToAction("fetchProduct");
+        }
+
+
+
+        [HttpPost]
+        public IActionResult ChangeProductImage(IFormFile product_image, Product product)
+        {
+            string imagePath = Path.Combine(_environment.WebRootPath, "product_image", product_image.FileName);
+            FileStream fs = new FileStream(imagePath, FileMode.Create);
+            product_image.CopyTo(fs);
+            product.product_image = product_image.FileName;
+            _context.tbl_products.Update(product);
+            _context.SaveChanges();
+            return RedirectToAction("fetchProduct");
+        }
+
 
 
 
